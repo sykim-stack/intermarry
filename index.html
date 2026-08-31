@@ -113,6 +113,7 @@
     background:#d4b47a; transform:translateY(-2px);
     box-shadow: 0 8px 32px rgba(201,169,110,0.25);
   }
+  .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 
   .btn-ghost {
     background:transparent; color: var(--muted);
@@ -602,45 +603,32 @@
 
   <div class="step-indicator" id="stepIndicator"></div>
 
-  <!-- STEP 1 -->
+  <!-- STEP 1: 상황 (→ intent 점수로 매핑) -->
   <div class="survey-step active" id="step1">
     <div class="survey-question">현재 상황이 어떻게 되시나요?</div>
     <div class="survey-hint">가장 가까운 상황을 선택해주세요</div>
     <div class="options-grid">
-      <button class="option-btn" onclick="selectOption(this,'s_status','국제결혼 준비 중')">
+      <button class="option-btn" onclick="selectOption(this,'intent',5)">
         <span class="option-icon">💍</span> 국제결혼 준비 중
       </button>
-      <button class="option-btn" onclick="selectOption(this,'s_status','연애 중')">
+      <button class="option-btn" onclick="selectOption(this,'intent',4)">
         <span class="option-icon">❤️</span> 연애 중
       </button>
-      <button class="option-btn" onclick="selectOption(this,'s_status','이미 결혼함')">
+      <button class="option-btn" onclick="selectOption(this,'intent',3)">
         <span class="option-icon">🏡</span> 이미 결혼함
       </button>
-      <button class="option-btn" onclick="selectOption(this,'s_status','그냥 궁금해서')">
+      <button class="option-btn" onclick="selectOption(this,'intent',2)">
         <span class="option-icon">🤔</span> 그냥 궁금해서
       </button>
     </div>
     <div class="survey-nav">
       <div></div>
-      <button class="btn-next" id="nextBtn1" onclick="nextStep(1)" disabled>다음 →</button>
+      <button class="btn-next" id="nextBtn1" onclick="nextStep('intent')" disabled>다음 →</button>
     </div>
   </div>
 
-  <!-- STEP 2: 집 이름 (CoreNull 연결 포인트) -->
-  <div class="survey-step" id="step2">
-    <div class="survey-question">우리 공간 이름을 지어볼까요?</div>
-    <div class="survey-hint">나중에 실제 기록 공간이 됩니다 · 예: 하준이네, 김&응옥, 우리가족</div>
-    <div style="display:flex; flex-direction:column; gap:12px;">
-      <input type="text" id="s_house" class="input-field" placeholder="우리 공간 이름 (예: 하준이네)">
-    </div>
-    <div class="survey-nav">
-      <button class="btn-back" onclick="prevStep(1)">← 이전</button>
-      <button class="btn-next" onclick="nextStep(1)">다음 →</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: 연락처 -->
-  <div class="survey-step" id="step2">
+  <!-- STEP 2: 연락처 (id 충돌 수정: step_contact) -->
+  <div class="survey-step" id="step_contact">
     <div class="survey-question">기본 정보를 알려주세요</div>
     <div class="survey-hint">상담 연결을 위해서만 사용됩니다</div>
     <div style="display:flex; flex-direction:column; gap:12px;">
@@ -651,8 +639,32 @@
       <input type="tel" id="s_phone" class="input-field" placeholder="연락처 (010-0000-0000)">
     </div>
     <div class="survey-nav">
-      <button class="btn-back" onclick="prevStep(2)">← 이전</button>
-      <button class="btn-next" onclick="nextStep(2)">다음 →</button>
+      <button class="btn-back" onclick="prevStep()">← 이전</button>
+      <button class="btn-next" onclick="nextStep('contact')">다음 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: 예산 (신규 — budget 컬럼 실제 수집) -->
+  <div class="survey-step" id="step2">
+    <div class="survey-question">예산은 어느 정도 생각하고 계신가요?</div>
+    <div class="survey-hint">대략적인 범위면 충분합니다</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption(this,'budget','미정/알아보는 중')">
+        <span class="option-icon">🔍</span> 미정 / 알아보는 중
+      </button>
+      <button class="option-btn" onclick="selectOption(this,'budget','500만원 이하')">
+        <span class="option-icon">💰</span> 500만원 이하
+      </button>
+      <button class="option-btn" onclick="selectOption(this,'budget','500~1500만원')">
+        <span class="option-icon">💰</span> 500~1,500만원
+      </button>
+      <button class="option-btn" onclick="selectOption(this,'budget','1500만원 이상')">
+        <span class="option-icon">💰</span> 1,500만원 이상
+      </button>
+    </div>
+    <div class="survey-nav">
+      <button class="btn-back" onclick="prevStep()">← 이전</button>
+      <button class="btn-next" id="nextBtn2" onclick="nextStep('budget')" disabled>다음 →</button>
     </div>
   </div>
 
@@ -661,22 +673,22 @@
     <div class="survey-question">관심 있는 국가는?</div>
     <div class="survey-hint">복수 선택 가능합니다</div>
     <div class="options-grid">
-      <button class="option-btn" onclick="toggleMulti(this,'s_country','베트남')">
+      <button class="option-btn" onclick="toggleMulti(this,'country','베트남')">
         <span class="option-icon">🇻🇳</span> 베트남
       </button>
-      <button class="option-btn" onclick="toggleMulti(this,'s_country','캄보디아')">
+      <button class="option-btn" onclick="toggleMulti(this,'country','캄보디아')">
         <span class="option-icon">🇰🇭</span> 캄보디아
       </button>
-      <button class="option-btn" onclick="toggleMulti(this,'s_country','러시아')">
+      <button class="option-btn" onclick="toggleMulti(this,'country','러시아')">
         <span class="option-icon">🇷🇺</span> 러시아
       </button>
-      <button class="option-btn" onclick="toggleMulti(this,'s_country','일본')">
+      <button class="option-btn" onclick="toggleMulti(this,'country','일본')">
         <span class="option-icon">🇯🇵</span> 일본
       </button>
     </div>
     <div class="survey-nav">
-      <button class="btn-back" onclick="prevStep(3)">← 이전</button>
-      <button class="btn-next" onclick="nextStep(3)">다음 →</button>
+      <button class="btn-back" onclick="prevStep()">← 이전</button>
+      <button class="btn-next" onclick="nextStep('country')">다음 →</button>
     </div>
   </div>
 
@@ -707,19 +719,18 @@
       </label>
     </div>
     <div class="survey-nav">
-      <button class="btn-back" onclick="prevStep(4)">← 이전</button>
-      <button class="btn-next" onclick="submitSurvey()">결과 확인 →</button>
+      <button class="btn-back" onclick="prevStep()">← 이전</button>
+      <button class="btn-next" id="submitBtn" onclick="submitSurvey()">결과 확인 →</button>
     </div>
   </div>
 
   <!-- COMPLETE -->
   <div class="complete-screen" id="completeScreen">
     <div class="complete-icon">✦</div>
-    <h3 class="complete-title">접수되었습니다</h3>
-    <p class="complete-desc">
+    <h3 class="complete-title" id="completeTitle">접수되었습니다</h3>
+    <p class="complete-desc" id="completeDesc">
       담당자가 24시간 이내에 연락드립니다.<br>
-      상담은 계약이 아니라 이해를 위한 시간입니다.<br><br>
-      
+      상담은 계약이 아니라 이해를 위한 시간입니다.
     </p>
     <button class="btn-primary" onclick="scrollToConsult()" style="width:100%; margin-bottom:12px;">
       1:1 상담 예약하기
@@ -819,16 +830,19 @@ const UTM = {
   content: params.get('utm_content') || '',
 };
 
-const TOTAL_STEPS = 4;
-let currentStep = 1;
-const surveyData = { status:'', house:'', name:'', age:null, phone:'', country:[], concerns:[] };
+// 실제 화면에 표시되는 스텝 순서 (id 기준)
+const STEP_ORDER = ['step1', 'step_contact', 'step2', 'step3', 'step4'];
+const TOTAL_STEPS = STEP_ORDER.length;
+let currentIndex = 0; // STEP_ORDER 내 인덱스
+
+const surveyData = { intent:null, name:'', age:null, phone:'', budget:'', country:[], concerns:[] };
 
 function buildIndicator() {
   const el = document.getElementById('stepIndicator');
   el.innerHTML = '';
-  for (let i = 1; i <= TOTAL_STEPS; i++) {
+  for (let i = 0; i < TOTAL_STEPS; i++) {
     const dot = document.createElement('div');
-    dot.className = 'step-dot' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    dot.className = 'step-dot' + (i < currentIndex ? ' done' : i === currentIndex ? ' active' : '');
     el.appendChild(dot);
   }
 }
@@ -837,12 +851,16 @@ buildIndicator();
 function scrollToSurvey()  { document.getElementById('survey').scrollIntoView({ behavior:'smooth' }); }
 function scrollToConsult() { document.getElementById('consult').scrollIntoView({ behavior:'smooth' }); }
 
+function currentStepId() { return STEP_ORDER[currentIndex]; }
+
 function selectOption(btn, key, val) {
   btn.closest('.options-grid').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   surveyData[key] = val;
-  const nb = document.getElementById('nextBtn' + currentStep);
-  if (nb) nb.disabled = false;
+  // 현재 스텝의 다음 버튼 활성화 (있는 경우)
+  const stepEl = document.getElementById(currentStepId());
+  const nb = stepEl.querySelector('.btn-next[disabled], .btn-next');
+  if (nb && nb.hasAttribute('disabled')) nb.disabled = false;
 }
 
 function toggleMulti(btn, key, val) {
@@ -857,38 +875,52 @@ function toggleConcern(cb) {
   else surveyData.concerns = surveyData.concerns.filter(v => v !== cb.value);
 }
 
-function nextStep(from) {
-  if (from === 2) {
+// leavingStep: 지금 벗어나려는 스텝이 무엇인지 이름으로 명시해서
+// 해당 스텝에 맞는 유효성 검사만 정확히 실행한다.
+function nextStep(leavingStep) {
+  if (leavingStep === 'intent') {
+    if (surveyData.intent === null) { showToast('상황을 선택해주세요', 'error'); return; }
+  }
+  if (leavingStep === 'contact') {
     const name  = document.getElementById('s_name').value.trim();
     const age   = document.getElementById('s_age').value;
     const phone = document.getElementById('s_phone').value.trim();
     if (!name || !age || !phone) { showToast('모든 항목을 입력해주세요', 'error'); return; }
     surveyData.name  = name;
-    surveyData.age   = parseInt(age);
+    surveyData.age   = parseInt(age, 10);
     surveyData.phone = phone;
   }
-  
-  document.getElementById('step' + from).classList.remove('active');
-  currentStep = from + 1;
-  document.getElementById('step' + currentStep).classList.add('active');
+  if (leavingStep === 'budget') {
+    if (!surveyData.budget) { showToast('예산 범위를 선택해주세요', 'error'); return; }
+  }
+  // 'country' 단계는 선택 없이도 다음으로 넘어갈 수 있게 허용 (복수선택 optional)
+
+  document.getElementById(STEP_ORDER[currentIndex]).classList.remove('active');
+  currentIndex += 1;
+  document.getElementById(STEP_ORDER[currentIndex]).classList.add('active');
   buildIndicator();
   document.getElementById('survey').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-function prevStep(from) {
-  document.getElementById('step' + from).classList.remove('active');
-  currentStep = from - 1;
-  document.getElementById('step' + currentStep).classList.add('active');
+function prevStep() {
+  document.getElementById(STEP_ORDER[currentIndex]).classList.remove('active');
+  currentIndex -= 1;
+  document.getElementById(STEP_ORDER[currentIndex]).classList.add('active');
   buildIndicator();
 }
 
 async function submitSurvey() {
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '전송 중...';
+
+  // 실제 leads 테이블 컬럼에 맞춘 payload
   const payload = {
     name:         surveyData.name,
-    age:          surveyData.age,
     phone:        surveyData.phone,
-    status:       surveyData.status,
-    house_name:   surveyData.house,
+    age:          surveyData.age,
+    intent:       surveyData.intent,
+    budget:       surveyData.budget,
     country:      surveyData.country.join(','),
     concerns:     surveyData.concerns.join(','),
     utm_source:   UTM.source,
@@ -897,8 +929,10 @@ async function submitSurvey() {
     client_id:    'intermarry',
     paid:         false,
     converted:    false,
+    chat_started: false,
   };
 
+  let success = false;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
       method: 'POST',
@@ -910,14 +944,35 @@ async function submitSurvey() {
       },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) console.warn('[Lead]', await res.text());
-    else showToast('접수 완료! 곧 연락드리겠습니다 ✦', 'success');
-  } catch(e) { console.warn('[Lead]', e.message); }
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('[Lead insert failed]', res.status, errText);
+    } else {
+      success = true;
+    }
+  } catch (e) {
+    console.error('[Lead insert error]', e.message);
+  }
 
-  document.getElementById('step4').classList.remove('active');
+  submitBtn.disabled = false;
+  submitBtn.textContent = '결과 확인 →';
+
+  document.getElementById(currentStepId()).classList.remove('active');
   document.getElementById('completeScreen').classList.add('active');
   document.getElementById('stepIndicator').style.display = 'none';
   document.getElementById('survey').scrollIntoView({ behavior:'smooth' });
+
+  if (success) {
+    showToast('접수 완료! 곧 연락드리겠습니다 ✦', 'success');
+  } else {
+    // 저장 실패 시에도 사용자 경험은 끊기지 않되, 문구를 다르게 안내해
+    // 담당자가 직접 챙길 수 있도록 한다.
+    document.getElementById('completeTitle').textContent = '접수 확인 중입니다';
+    document.getElementById('completeDesc').innerHTML =
+      '일시적인 오류로 자동 접수가 지연될 수 있습니다.<br>' +
+      '빠른 상담을 원하시면 아래 상담 예약을 이용해주세요.';
+    showToast('접수 처리에 문제가 있었습니다. 다시 시도해주세요', 'error');
+  }
 }
 
 function toggleFaq(item) {
