@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>국제결혼 적성검사 · 매칭 확률 정밀 보고서 — 인터메리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080808;
+  --bg2:     #0f0f0f;
+  --bg3:     #161616;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #f2ece4;
+  --muted:   #999;
+  --accent:  #c9a96e;
+  --accent2: #8b6f47;
+  --serif:   'Noto Serif KR', serif;
+  --sans:    'Noto Sans KR', sans-serif;
+  --mono:    'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-weight:300;
+  overflow-x:hidden; padding-bottom: 84px;
+}
+
+/* NAV */
+.back-link {
+  position:fixed; top:20px; left:32px; z-index:101;
+  font-family: var(--mono); font-size:10px;
+  letter-spacing:1.5px; color: var(--muted);
+  text-decoration:none; display:flex; align-items:center; gap:6px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+/* SECTION SHELL */
+section { padding: 100px 24px; max-width: 760px; margin:0 auto; }
+section.tight { padding-top:60px; padding-bottom:60px; }
+.section-eyebrow {
+  font-family: var(--mono); font-size:10px;
+  letter-spacing:3px; color: var(--accent);
+  text-align:center; margin-bottom:20px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight:300; line-height:1.5;
+  text-align:center; margin-bottom:24px;
+}
+.section-body {
+  font-size:15px; color: var(--muted);
+  line-height:1.9; text-align:center;
+  max-width: 560px; margin: 0 auto;
+}
+.divider { border:none; border-top:1px solid var(--border); max-width:760px; margin:0 auto; }
+
+/* HERO */
+.hero {
+  padding: 150px 24px 60px; max-width: 780px; margin:0 auto; text-align:center;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size:11px;
+  letter-spacing:3px; color: var(--accent);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 300; line-height: 1.4;
+  margin-bottom: 24px;
+}
+.hero-sub {
+  font-size: 16px; color: var(--muted);
+  line-height: 1.9; max-width: 480px; margin: 0 auto 40px;
+}
+.hero-meta {
+  display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+  margin-bottom: 36px;
+}
+.hero-meta-item { text-align:center; }
+.hero-meta-value { font-family:var(--serif); font-size:20px; color:var(--text); }
+.hero-meta-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:4px; }
+.hero-price-box {
+  display:inline-flex; flex-direction:column; align-items:center;
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 28px 48px; border-radius:2px; margin-bottom: 20px;
+}
+.hero-price-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); margin-bottom:8px; }
+.hero-price { font-family: var(--serif); font-size: 40px; color: var(--accent); font-weight:300; }
+.hero-price span { font-size:16px; color:var(--muted); font-family:var(--sans); }
+
+/* PRODUCT DEFINITION BOX */
+.definition-box {
+  background: var(--bg2); border:1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  padding: 32px 28px; border-radius:2px;
+  font-size:15px; line-height:2; color: var(--text);
+  margin: 0 auto;
+}
+.definition-box strong { color: var(--accent); font-weight:500; }
+.analyze-tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:24px; }
+.analyze-tag {
+  font-family:var(--mono); font-size:11px; letter-spacing:0.5px;
+  background: var(--bg3); border:1px solid var(--border);
+  color: var(--accent); padding:8px 16px; border-radius:20px;
+}
+
+/* PROCESS STEPS */
+.process-list { display:flex; flex-direction:column; }
+.process-item { display:flex; gap:20px; padding: 24px 0; }
+.process-num {
+  font-family: var(--serif); font-size:22px; color: var(--accent);
+  min-width:48px;
+}
+.process-content { flex:1; padding-bottom:0; border-bottom:1px solid var(--border); padding-bottom:24px; }
+.process-item:last-child .process-content { border-bottom:none; }
+.process-title { font-size:16px; color: var(--text); margin-bottom:6px; font-weight:400; }
+.process-desc { font-size:14px; color: var(--muted); line-height:1.7; }
+
+/* REPORT PREVIEW CARD */
+.report-card {
+  background: linear-gradient(180deg, var(--bg2), var(--bg3));
+  border:1px solid rgba(201,169,110,0.25);
+  border-radius:4px; padding: 40px 32px;
+  position:relative;
+}
+.report-watermark {
+  position:absolute; top:20px; right:24px;
+  font-family:var(--mono); font-size:9px;
+  letter-spacing:1px; color: var(--muted);
+  border:1px solid var(--border); padding:4px 10px; border-radius:2px;
+}
+.report-header { font-family: var(--mono); font-size:11px; letter-spacing:3px; color: var(--accent); margin-bottom:28px; }
+.report-score-row { display:flex; align-items:baseline; gap:16px; margin-bottom:32px; }
+.report-score-label { font-size:14px; color: var(--muted); }
+.report-score-value { font-family: var(--serif); font-size:48px; color: var(--text); }
+.report-score-value span { font-size:20px; color:var(--accent); }
+.report-divider { border:none; border-top:1px dashed var(--border); margin: 24px 0; }
+.report-sub-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); margin-bottom:16px; }
+.report-rank-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; font-size:14px; }
+.report-rank-name { color: var(--text); display:flex; gap:10px; align-items:center; }
+.report-rank-num { font-family:var(--mono); color:var(--accent); font-size:12px; }
+.report-rank-pct { font-family:var(--serif); color: var(--accent); font-size:16px; }
+.report-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.report-tag { font-size:13px; background: var(--bg); border:1px solid var(--border); padding:6px 14px; border-radius:20px; color: var(--text); }
+.report-gauge-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px; color: var(--muted); }
+.report-dots { display:flex; gap:4px; }
+.dot { width:8px; height:8px; border-radius:50%; background: var(--border); }
+.dot.filled { background: var(--accent); }
+.report-note {
+  font-size:12px; color: var(--muted); text-align:center;
+  margin-top:28px; padding-top:20px; border-top:1px solid var(--border);
+  line-height:1.7;
+}
+
+/* ANALYSIS TABLE */
+.analysis-table { width:100%; border-collapse: collapse; }
+.analysis-table tr { border-bottom:1px solid var(--border); }
+.analysis-table tr:last-child { border-bottom:none; }
+.analysis-table td { padding: 18px 8px; font-size:14px; vertical-align:top; }
+.analysis-table td:first-child { color: var(--accent); font-family:var(--mono); font-size:12px; letter-spacing:0.5px; white-space:nowrap; padding-right:24px; width:110px; }
+.analysis-table td:last-child { color: var(--text); line-height:1.7; }
+
+/* DATA FLOW */
+.flow-list { display:flex; flex-direction:column; align-items:center; gap:0; }
+.flow-step {
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 14px 28px; border-radius:20px;
+  font-size:13px; color: var(--text);
+}
+.flow-arrow { color: var(--accent2); font-size:14px; padding: 6px 0; }
+.data-disclaimer {
+  font-size:12px; color: var(--muted); text-align:center;
+  margin-top:24px; line-height:1.7;
+}
+
+/* WHO GRID */
+.fit-grid {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap:16px;
+}
+.fit-item {
+  text-align:center; padding: 28px 20px;
+  background: var(--bg2); border:1px solid var(--border);
+  border-radius:2px;
+}
+.fit-icon { font-size:22px; margin-bottom:12px; }
+.fit-text { font-size:14px; color: var(--muted); line-height:1.7; }
+
+/* LIMITATION BOX */
+.limitation-box {
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 28px 28px; border-radius:2px;
+  font-size:14px; color: var(--muted); line-height:1.9;
+}
+.limitation-box strong { color: var(--text); }
+
+/* JOURNEY STEPS */
+.journey-steps {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap:16px; text-align:center;
+}
+.journey-step {
+  padding: 24px 16px; background: var(--bg2);
+  border:1px solid var(--border); border-radius:2px;
+  position:relative;
+}
+.journey-step.highlight { border-color: rgba(201,169,110,0.4); }
+.journey-step-num { font-family:var(--mono); font-size:10px; color: var(--accent); letter-spacing:1px; margin-bottom:10px; }
+.journey-step-title { font-size:14px; color: var(--text); margin-bottom:6px; }
+.journey-step-desc { font-size:12px; color: var(--muted); line-height:1.6; }
+.journey-payback {
+  text-align:center; margin-top:28px; font-size:14px; color: var(--accent);
+  background: rgba(201,169,110,0.08); border:1px solid rgba(201,169,110,0.25);
+  padding:16px; border-radius:2px;
+}
+
+/* FAQ */
+.faq-item { border-bottom:1px solid var(--border); padding:22px 0; cursor:pointer; }
+.faq-q { display:flex; justify-content:space-between; align-items:center; font-size:15px; gap:16px; }
+.faq-toggle { color:var(--accent); font-size:18px; transition:transform 0.3s; min-width:20px; text-align:center; }
+.faq-a { font-size:14px; color:var(--muted); line-height:1.8; margin-top:14px; display:none; }
+.faq-item.open .faq-a { display:block; }
+.faq-item.open .faq-toggle { transform:rotate(45deg); }
+
+/* FINAL CTA */
+.final-cta { text-align:center; padding: 100px 24px 140px; }
+.btn-primary {
+  background: var(--accent); color:#080808;
+  border:none; cursor:pointer;
+  font-family: var(--sans); font-size:14px;
+  font-weight:500; letter-spacing:1px;
+  padding: 18px 48px; border-radius:2px;
+  transition: all 0.3s;
+}
+.btn-primary:hover { background:#d4b47a; transform:translateY(-2px); box-shadow: 0 8px 32px rgba(201,169,110,0.25); }
+
+/* STICKY CTA */
+.sticky-cta {
+  position: fixed; bottom:0; left:0; right:0;
+  background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
+  border-top:1px solid var(--border);
+  padding: 16px 24px; z-index:150;
+  display:flex; align-items:center; justify-content:center; gap:20px;
+}
+.sticky-price { font-family: var(--serif); color: var(--accent); font-size:18px; }
+.sticky-cta .btn-primary { padding:14px 40px; font-size:13px; }
+
+/* MODAL (기존 재사용) */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  z-index:200; align-items:center; justify-content:center; padding:24px;
+}
+.modal-overlay.active { display:flex; }
+.modal-box {
+  background: var(--bg2); border:1px solid var(--border);
+  border-radius:4px; padding:40px 32px; max-width:420px; width:100%;
+  animation: fadeUp 0.3s ease; position:relative;
+}
+.modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; line-height:1; padding:4px; }
+.modal-close:hover { color:var(--text); }
+.modal-eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--accent); margin-bottom:10px; }
+.modal-title { font-family:var(--serif); font-size:20px; font-weight:400; line-height:1.4; margin-bottom:24px; }
+.modal-fields { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.input-field {
+  width:100%; background:var(--bg3); border:1px solid var(--border);
+  color: var(--text); font-family:var(--sans); font-size:15px;
+  padding:16px 20px; border-radius:2px; outline:none; transition:border-color 0.3s;
+}
+.input-field:focus { border-color:var(--accent); }
+.input-field::placeholder { color:var(--muted); }
+.input-row { display:flex; gap:8px; }
+.input-row .input-field { flex:1; }
+.modal-submit {
+  width:100%; background:var(--accent); color:#080808; border:none; cursor:pointer;
+  font-family:var(--sans); font-size:13px; font-weight:500; letter-spacing:1px;
+  padding:16px; border-radius:2px; transition:all 0.3s;
+}
+.modal-submit:hover { background:#d4b47a; }
+.modal-submit:disabled { opacity:0.5; cursor:not-allowed; }
+.modal-fineprint { font-size:12px; color:var(--muted); margin-top:16px; text-align:center; line-height:1.6; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--bg3); border:1px solid var(--border);
+  color:var(--text); font-size:13px; padding:12px 24px; border-radius:2px;
+  opacity:0; transition:all 0.4s; z-index:999; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.success { border-color:rgba(90,170,122,0.4); color:#5aaa7a; }
+.toast.error { border-color:rgba(224,90,90,0.4); color:#e05a5a; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:600px) {
+  .back-link { top:16px; left:20px; }
+  .sticky-cta { flex-direction:column; gap:10px; padding:14px 20px; }
+  .hero-meta { gap:16px; }
+  .input-row { flex-direction:column; }
+}
+
+</style>
+</head>
+<body>
+<a href="../index.html" class="back-link">← INTERMARRY</a>
+
+<section class="hero">
+  <div class="hero-eyebrow">STEP 1 · 진단형</div>
+  <h1 class="hero-title">내가 국제결혼을 한다면<br>어떤 나라, 어떤 상대와 잘 맞을까?</h1>
+  <p class="hero-sub">15년간의 상담 데이터를 기반으로 나의 성향과 결혼 조건을 분석해<br>국가별·성향별 매칭 가능성을 리포트로 확인합니다.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="hero-meta-value">10~15분</div><div class="hero-meta-label">소요 시간</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-value">1:1</div><div class="hero-meta-label">개인별 리포트</div></div>
+  </div>
+  <div class="hero-price-box">
+    <div class="hero-price-label">체험 가격</div>
+    <div class="hero-price">30,000<span>원</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">WHY</div>
+  <h2 class="section-title">왜 만나기 전에<br>나부터 확인해야 할까요?</h2>
+  <p class="section-body">
+    국제결혼은 국내결혼보다 확인해야 할 조건이 많습니다.<br>
+    나이 차이, 언어, 문화, 경제적 조건, 가족관계, 생활환경...<br><br>
+    그런데 대부분은 상대를 만나고 나서 생각합니다.<br>
+    <strong style="color:var(--text)">우리는 그 순서를 바꿉니다.</strong><br>
+    만나기 전에 먼저 나를 진단합니다.
+  </p>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">PRODUCT</div>
+  <h2 class="section-title">이 상품은 무엇을 분석하나요?</h2>
+  <div class="definition-box">
+    국제결혼을 시작하기 전에 받는 <strong>사전 진단</strong>입니다.<br>
+    단순한 성격 테스트가 아닙니다.<br><br>
+    <strong>나의 조건 + 결혼관 + 생활환경 + 상대 선호 + 국제결혼 조건</strong>을 종합해,<br>
+    "현재 나의 조건으로 국제결혼을 시작한다면 어떤 방향이 상대적으로 적합한가?"를 확인하는 상품입니다.
+  </div>
+  <div class="analyze-tags">
+    <span class="analyze-tag">결혼관</span>
+    <span class="analyze-tag">생활환경</span>
+    <span class="analyze-tag">상대 선호</span>
+    <span class="analyze-tag">예산 조건</span>
+    <span class="analyze-tag">언어·문화 적응도</span>
+    <span class="analyze-tag">가족관계</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">PROCESS</div>
+  <h2 class="section-title">검사는 이렇게 진행됩니다</h2>
+  <div class="process-list">
+    <div class="process-item">
+      <div class="process-num">01</div>
+      <div class="process-content">
+        <div class="process-title">기본 정보 입력</div>
+        <div class="process-desc">나이 / 지역 / 직업 / 결혼 경험 등</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">02</div>
+      <div class="process-content">
+        <div class="process-title">결혼관 진단</div>
+        <div class="process-desc">결혼에 대한 생각과 생활 방식</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">03</div>
+      <div class="process-content">
+        <div class="process-title">상대방 선호 분석</div>
+        <div class="process-desc">나이 / 성향 / 생활환경 / 국가 등</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">04</div>
+      <div class="process-content">
+        <div class="process-title">국제결혼 조건 분석</div>
+        <div class="process-desc">예산 / 거리 / 언어 / 가족관계 / 결혼 후 생활</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">05</div>
+      <div class="process-content">
+        <div class="process-title">데이터 분석</div>
+        <div class="process-desc">축적된 상담 데이터를 기반으로 조건 분석</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">06</div>
+      <div class="process-content">
+        <div class="process-title">개인별 결과 리포트</div>
+        <div class="process-desc">나에게 적합한 방향과 주의사항 제공</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">REPORT PREVIEW</div>
+  <h2 class="section-title">실제 결과는<br>이렇게 제공됩니다</h2>
+  <p class="section-body" style="margin-bottom:32px;">아래는 형식을 보여주기 위한 예시이며, 실제 결과는 응답 내용에 따라 달라집니다.</p>
+
+  <div class="report-card">
+    <div class="report-watermark">예시 리포트</div>
+    <div class="report-header">YOUR MATCHING REPORT</div>
+
+    <div class="report-score-row">
+      <div class="report-score-label">종합 매칭 가능성</div>
+      <div class="report-score-value">78<span>%</span></div>
+    </div>
+
+    <hr class="report-divider">
+
+    <div class="report-sub-label">추천 국가</div>
+    <div class="report-rank-row">
+      <div class="report-rank-name"><span class="report-rank-num">①</span> 베트남</div>
+      <div class="report-rank-pct">86%</div>
+    </div>
+    <div class="report-rank-row">
+      <div class="report-rank-name"><span class="report-rank-num">②</span> 필리핀</div>
+      <div class="report-rank-pct">72%</div>
+    </div>
+    <div class="report-rank-row">
+      <div class="report-rank-name"><span class="report-rank-num">③</span> 캄보디아</div>
+      <div class="report-rank-pct">64%</div>
+    </div>
+
+    <hr class="report-divider">
+
+    <div class="report-sub-label">나의 결혼 성향</div>
+    <div class="report-tags">
+      <span class="report-tag">현실 안정형</span>
+      <span class="report-tag">가족관계 중시</span>
+      <span class="report-tag">생활 적응도 높음</span>
+    </div>
+
+    <hr class="report-divider">
+
+    <div class="report-sub-label">주의할 부분</div>
+    <div class="report-gauge-row">
+      <span>언어 적응</span>
+      <div class="report-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="report-gauge-row">
+      <span>문화 차이</span>
+      <div class="report-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="report-gauge-row">
+      <span>경제 조건</span>
+      <div class="report-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="report-gauge-row">
+      <span>가족관계</span>
+      <div class="report-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+    </div>
+
+    <div class="report-note">실제 리포트는 응답하신 내용을 기반으로 개인별로 산출되며,<br>담당 상담사가 함께 해석을 도와드립니다.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">ANALYSIS</div>
+  <h2 class="section-title">리포트에는<br>이런 내용이 담깁니다</h2>
+  <table class="analysis-table">
+    <tr><td>종합 진단</td><td>국제결혼 적합도</td></tr>
+    <tr><td>성향 분석</td><td>결혼생활에서의 주요 성향</td></tr>
+    <tr><td>국가 분석</td><td>상대적으로 적합한 국가</td></tr>
+    <tr><td>상대 유형</td><td>잘 맞을 가능성이 높은 성향</td></tr>
+    <tr><td>조건 분석</td><td>나이 · 경제 · 거리 · 언어 등</td></tr>
+    <tr><td>주의사항</td><td>국제결혼에서 고려할 부분</td></tr>
+    <tr><td>상담 방향</td><td>다음 단계에서 확인할 부분</td></tr>
+  </table>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">DATA</div>
+  <h2 class="section-title">15년의 상담 경험을<br>진단에 활용합니다</h2>
+  <div class="flow-list">
+    <div class="flow-step">상담 경험</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">국가별 특성</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">연령 · 성향 · 조건</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">결혼생활에서 나타나는 패턴</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">개인 조건과 비교</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step" style="border-color: var(--accent); color: var(--accent);">개인별 진단</div>
+  </div>
+  <p class="data-disclaimer">실제 상담 사례와 데이터를 기반으로 하되, 개인별 결과는 통계적 참고 자료이며 확정된 결과를 의미하지 않습니다.</p>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">WHO</div>
+  <h2 class="section-title">이런 분께 추천드려요</h2>
+  <div class="fit-grid">
+    <div class="fit-item"><div class="fit-icon">🤔</div><div class="fit-text">국제결혼에 관심은 있지만 아직 확신이 없는 분</div></div>
+    <div class="fit-item"><div class="fit-icon">💸</div><div class="fit-text">큰돈부터 쓰기 전에 가능성을 먼저 확인하고 싶은 분</div></div>
+    <div class="fit-item"><div class="fit-icon">😰</div><div class="fit-text">사기 피해가 걱정돼서 검증된 데이터를 원하는 분</div></div>
+    <div class="fit-item"><div class="fit-icon">📊</div><div class="fit-text">감이 아닌 통계 기반 진단을 받고 싶은 분</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">LIMITATION</div>
+  <h2 class="section-title">매칭 확률이<br>의미하는 것</h2>
+  <div class="limitation-box">
+    검사 결과의 <strong>매칭 확률은 실제 결혼 성사율을 보장하는 수치가 아닙니다.</strong><br><br>
+    고객님의 조건과 성향을 기준으로 분석한 <strong>상대적 적합도 지표</strong>이며,
+    실제 만남과 교제 과정에서의 결과는 두 분의 관계와 노력에 따라 달라질 수 있습니다.
+    저희는 이 진단을 <strong>"확신"이 아닌 "출발점"</strong>으로 활용해주시길 권해드립니다.
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">JOURNEY</div>
+  <h2 class="section-title">진단은 시작일 뿐입니다</h2>
+  <div class="journey-steps">
+    <div class="journey-step highlight">
+      <div class="journey-step-num">STEP 01</div>
+      <div class="journey-step-title">나를 진단합니다</div>
+      <div class="journey-step-desc">지금 이 검사</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 02</div>
+      <div class="journey-step-title">결과를 확인합니다</div>
+      <div class="journey-step-desc">개인별 리포트 수령</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 03</div>
+      <div class="journey-step-title">상담을 진행합니다</div>
+      <div class="journey-step-desc">담당자와 결과 해석</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 04</div>
+      <div class="journey-step-title">실제 만남을 준비합니다</div>
+      <div class="journey-step-desc">화상미팅 · 맞선여행으로 연결</div>
+    </div>
+  </div>
+  <div class="journey-payback">상담을 진행하실 경우, 진단 비용 30,000원을 100% 포인트로 페이백해드립니다.</div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">FAQ</div>
+  <h2 class="section-title">자주 묻는 질문</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>검사는 어떻게 진행되나요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">간단한 설문 응답 후, 나이·의향·예산·관심국가 등을 기반으로 매칭 확률을 분석한 리포트를 제공해드립니다.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>정말 3만원이 전부인가요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">네, 추가 비용 없이 3만원으로 진단 리포트를 받아보실 수 있습니다. 이후 정식 상담으로 전환하시면 결제하신 3만원은 100% 포인트로 페이백됩니다.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>결과가 마음에 안 들면 어떻게 되나요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">결과는 참고용 진단 리포트이며, 이후 상담 여부는 전적으로 본인 선택입니다. 강요하지 않습니다.</div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2 class="section-title">3만원으로<br>첫 번째 확인을 시작하세요.</h2>
+  <button class="btn-primary" onclick="handleProductClick('적성검사')">신청하기</button>
+</div>
+
+
+<div class="sticky-cta">
+  <span class="sticky-price">30,000원</span>
+  <button class="btn-primary" onclick="handleProductClick('적성검사')">신청하기</button>
+</div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-eyebrow" id="modalEyebrow">EXPERIENCE PROGRAM</div>
+    <div class="modal-title" id="modalTitle">신청 정보를 입력해주세요</div>
+    <div class="modal-fields">
+      <input type="text" id="m_name" class="input-field" placeholder="성함">
+      <div class="input-row">
+        <input type="number" id="m_age" class="input-field" placeholder="나이" min="20" max="70">
+        <input type="tel" id="m_phone" class="input-field" placeholder="연락처 (010-0000-0000)">
+      </div>
+    </div>
+    <button class="modal-submit" id="modalSubmitBtn" onclick="submitProductLead()">신청하기</button>
+    <p class="modal-fineprint">신청 후 담당자가 결제 안내를 위해 연락드립니다.<br>개인정보는 상담 목적 외 사용되지 않습니다.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+
+const SUPABASE_URL  = "https://grlfocvlfatuvphkyivd.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdybGZvY3ZsZmF0dXZwaGt5aXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDM1MzksImV4cCI6MjA4NTkxOTUzOX0.4dLzD1AYSuigxU_Q5ZZwZ6XDGejMvbuoYIjmB4D7dxo";
+
+const params = new URLSearchParams(window.location.search);
+const UTM = {
+  source:  params.get('utm_source')  || 'direct',
+  medium:  params.get('utm_medium')  || '',
+  content: params.get('utm_content') || '',
+};
+
+let selectedProduct = null;
+function handleProductClick(productName) {
+  selectedProduct = productName;
+  document.getElementById('modalEyebrow').textContent = productName.toUpperCase();
+  document.getElementById('modalTitle').textContent = `${productName} 신청 정보를 입력해주세요`;
+  document.getElementById('m_name').value = '';
+  document.getElementById('m_age').value = '';
+  document.getElementById('m_phone').value = '';
+  document.getElementById('productModal').classList.add('active');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('active');
+}
+
+async function submitProductLead() {
+  const name  = document.getElementById('m_name').value.trim();
+  const age   = document.getElementById('m_age').value;
+  const phone = document.getElementById('m_phone').value.trim();
+
+  if (!name || !age || !phone) {
+    showToast('모든 항목을 입력해주세요', 'error');
+    return;
+  }
+
+  const submitBtn = document.getElementById('modalSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '전송 중...';
+
+  const payload = {
+    name: name,
+    age: parseInt(age, 10),
+    phone: phone,
+    product: selectedProduct,
+    utm_source: UTM.source,
+    utm_medium: UTM.medium,
+    utm_content: UTM.content,
+    client_id: 'intermarry',
+    paid: false,
+    converted: false,
+    chat_started: false,
+  };
+
+  let success = false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error('[Product lead insert failed]', res.status, await res.text());
+    } else {
+      success = true;
+    }
+  } catch (e) {
+    console.error('[Product lead insert error]', e.message);
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = '신청하기';
+  closeProductModal();
+
+  if (success) {
+    showToast(`${selectedProduct} 신청 접수완료! 결제 안내를 위해 곧 연락드려요 ✦`, 'success');
+  } else {
+    showToast('접수 처리에 문제가 있었습니다. 다시 시도해주세요', 'error');
+  }
+}
+
+function toggleFaq(item) { item.classList.toggle('open'); }
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type || '') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+</script>
+</body>
+</html>

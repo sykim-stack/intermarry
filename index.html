@@ -332,6 +332,17 @@
     font-size:12px; color:var(--muted);
     margin-bottom:20px; letter-spacing:0.3px;
   }
+  .btn-detail {
+    width:100%; background:none;
+    border:1px solid var(--border); color:var(--muted);
+    cursor:pointer; font-family:var(--sans);
+    font-size:12px; letter-spacing:0.5px;
+    padding:12px 20px; border-radius:2px;
+    margin-top:8px; transition: all 0.3s;
+    display:block; text-align:center; text-decoration:none;
+  }
+  .btn-detail:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
+
   .btn-product {
     width:100%; background:transparent;
     border:1px solid var(--accent); color:var(--accent);
@@ -523,6 +534,57 @@
     color:var(--muted); line-height:1.8; text-align:right;
   }
 
+  /* PRODUCT MODAL */
+  .modal-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index:200;
+    align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .modal-overlay.active { display:flex; }
+  .modal-box {
+    background: var(--bg2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:40px 32px;
+    max-width:420px; width:100%;
+    animation: fadeUp 0.3s ease;
+    position:relative;
+  }
+  .modal-close {
+    position:absolute; top:16px; right:16px;
+    background:none; border:none; color:var(--muted);
+    font-size:20px; cursor:pointer; line-height:1;
+    padding:4px;
+  }
+  .modal-close:hover { color:var(--text); }
+  .modal-eyebrow {
+    font-family:var(--mono); font-size:10px;
+    letter-spacing:2px; color:var(--accent);
+    margin-bottom:10px;
+  }
+  .modal-title {
+    font-family:var(--serif); font-size:20px;
+    font-weight:400; line-height:1.4;
+    margin-bottom:24px;
+  }
+  .modal-fields { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+  .modal-submit {
+    width:100%; background:var(--accent); color:#080808;
+    border:none; cursor:pointer;
+    font-family:var(--sans); font-size:13px;
+    font-weight:500; letter-spacing:1px;
+    padding:16px; border-radius:2px; transition:all 0.3s;
+  }
+  .modal-submit:hover { background:#d4b47a; }
+  .modal-submit:disabled { opacity:0.5; cursor:not-allowed; }
+  .modal-fineprint {
+    font-size:12px; color:var(--muted);
+    margin-top:16px; text-align:center; line-height:1.6;
+  }
+
   /* TOAST */
   .toast {
     position:fixed; bottom:32px; left:50%;
@@ -693,6 +755,7 @@
         </ul>
         <div class="product-note">상담 전환 시 100% 포인트 페이백</div>
         <button class="btn-product" onclick="handleProductClick('적성검사')">신청하기</button>
+        <a class="btn-detail" href="pages/product-aptitude.html">자세히 보기 →</a>
       </div>
 
       <!-- 상품 2: 화상 상견례 (featured) -->
@@ -708,6 +771,7 @@
         </ul>
         <div class="product-note">전문 통역사 배정 · 편한 시간 예약</div>
         <button class="btn-product primary" onclick="handleProductClick('화상미팅')">신청하기</button>
+        <a class="btn-detail" href="pages/product-video.html">자세히 보기 →</a>
       </div>
 
       <!-- 상품 3: 맞선 여행 -->
@@ -722,6 +786,7 @@
         </ul>
         <div class="product-note">선착순 모집 · 일정표 별도 안내</div>
         <button class="btn-product" onclick="handleProductClick('맞선여행')">신청하기</button>
+        <a class="btn-detail" href="pages/product-tour.html">자세히 보기 →</a>
       </div>
     </div>
 
@@ -955,6 +1020,24 @@
   </div>
 </footer>
 
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-eyebrow" id="modalEyebrow">EXPERIENCE PROGRAM</div>
+    <div class="modal-title" id="modalTitle">신청 정보를 입력해주세요</div>
+    <div class="modal-fields">
+      <input type="text" id="m_name" class="input-field" placeholder="성함">
+      <div class="input-row">
+        <input type="number" id="m_age" class="input-field" placeholder="나이" min="20" max="70">
+        <input type="tel" id="m_phone" class="input-field" placeholder="연락처 (010-0000-0000)">
+      </div>
+    </div>
+    <button class="modal-submit" id="modalSubmitBtn" onclick="submitProductLead()">신청하기</button>
+    <p class="modal-fineprint">신청 후 담당자가 결제 안내를 위해 연락드립니다.<br>개인정보는 상담 목적 외 사용되지 않습니다.</p>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -990,13 +1073,84 @@ function scrollToSurvey()  { document.getElementById('survey').scrollIntoView({ 
 function scrollToConsult() { document.getElementById('consult').scrollIntoView({ behavior:'smooth' }); }
 function scrollToProducts(){ document.getElementById('products').scrollIntoView({ behavior:'smooth' }); }
 
-// 결제 모듈(토스페이먼츠) 연동 전까지 임시 처리.
-// 클릭 시 어떤 상품에 관심 있는지 표시만 하고, 실제 결제 대신
-// 무료 진단 설문(리드 수집)으로 자연스럽게 유도한다.
-// TODO: 토스페이먼츠 결제위젯 연동 완료 시 이 함수를 실제 결제 흐름으로 교체
+// 상품 카드 "신청하기" 클릭 시 → 모달 오픈 (결제 전 기본정보 먼저 수집)
+let selectedProduct = null;
 function handleProductClick(productName) {
-  showToast(`${productName} 결제 준비 중입니다. 담당자가 곧 연락드려요 ✦`, '');
-  scrollToSurvey();
+  selectedProduct = productName;
+  document.getElementById('modalEyebrow').textContent = productName.toUpperCase();
+  document.getElementById('modalTitle').textContent = `${productName} 신청 정보를 입력해주세요`;
+  document.getElementById('m_name').value = '';
+  document.getElementById('m_age').value = '';
+  document.getElementById('m_phone').value = '';
+  document.getElementById('productModal').classList.add('active');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('active');
+}
+
+async function submitProductLead() {
+  const name  = document.getElementById('m_name').value.trim();
+  const age   = document.getElementById('m_age').value;
+  const phone = document.getElementById('m_phone').value.trim();
+
+  if (!name || !age || !phone) {
+    showToast('모든 항목을 입력해주세요', 'error');
+    return;
+  }
+
+  const submitBtn = document.getElementById('modalSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '전송 중...';
+
+  // 기본정보 + 신청 상품명을 먼저 leads에 저장 (paid=false).
+  // 결제(토스페이먼츠) 연동 완료 시, 이 레코드를 결제 성공 후 paid=true로 업데이트하는 방식으로 이어붙인다.
+  const payload = {
+    name:         name,
+    age:          parseInt(age, 10),
+    phone:        phone,
+    product:      selectedProduct,
+    utm_source:   UTM.source,
+    utm_medium:   UTM.medium,
+    utm_content:  UTM.content,
+    client_id:    'intermarry',
+    paid:         false,
+    converted:    false,
+    chat_started: false,
+  };
+
+  let success = false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':         SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer':         'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error('[Product lead insert failed]', res.status, await res.text());
+    } else {
+      success = true;
+    }
+  } catch (e) {
+    console.error('[Product lead insert error]', e.message);
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = '신청하기';
+  closeProductModal();
+
+  if (success) {
+    // TODO: 토스페이먼츠 결제위젯 연동 완료 시, 여기서 결제창으로 이동시키고
+    // 결제 성공 콜백에서 해당 레코드를 paid=true로 업데이트하도록 교체한다.
+    showToast(`${selectedProduct} 신청 접수완료! 결제 안내를 위해 곧 연락드려요 ✦`, 'success');
+  } else {
+    showToast('접수 처리에 문제가 있었습니다. 다시 시도해주세요', 'error');
+  }
 }
 
 function currentStepId() { return STEP_ORDER[currentIndex]; }

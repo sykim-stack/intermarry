@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>현지 맞선 여행 · 안심 맞선 투어 패키지 — 인터메리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080808;
+  --bg2:     #0f0f0f;
+  --bg3:     #161616;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #f2ece4;
+  --muted:   #999;
+  --accent:  #c9a96e;
+  --accent2: #8b6f47;
+  --serif:   'Noto Serif KR', serif;
+  --sans:    'Noto Sans KR', sans-serif;
+  --mono:    'DM Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-weight:300;
+  overflow-x:hidden; padding-bottom: 84px;
+}
+
+/* NAV */
+.back-link {
+  position:fixed; top:20px; left:32px; z-index:101;
+  font-family: var(--mono); font-size:10px;
+  letter-spacing:1.5px; color: var(--muted);
+  text-decoration:none; display:flex; align-items:center; gap:6px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+/* SECTION SHELL */
+section { padding: 100px 24px; max-width: 760px; margin:0 auto; }
+section.tight { padding-top:60px; padding-bottom:60px; }
+.section-eyebrow {
+  font-family: var(--mono); font-size:10px;
+  letter-spacing:3px; color: var(--accent);
+  text-align:center; margin-bottom:20px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight:300; line-height:1.5;
+  text-align:center; margin-bottom:24px;
+}
+.section-body {
+  font-size:15px; color: var(--muted);
+  line-height:1.9; text-align:center;
+  max-width: 560px; margin: 0 auto;
+}
+.divider { border:none; border-top:1px solid var(--border); max-width:760px; margin:0 auto; }
+
+/* HERO */
+.hero {
+  padding: 150px 24px 60px; max-width: 780px; margin:0 auto; text-align:center;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size:11px;
+  letter-spacing:3px; color: var(--accent);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 300; line-height: 1.4;
+  margin-bottom: 24px;
+}
+.hero-sub {
+  font-size: 16px; color: var(--muted);
+  line-height: 1.9; max-width: 480px; margin: 0 auto 40px;
+}
+.hero-meta {
+  display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+  margin-bottom: 36px;
+}
+.hero-meta-item { text-align:center; }
+.hero-meta-value { font-family:var(--serif); font-size:20px; color:var(--text); }
+.hero-meta-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:4px; }
+.hero-price-box {
+  display:inline-flex; flex-direction:column; align-items:center;
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 28px 48px; border-radius:2px; margin-bottom: 20px;
+}
+.hero-price-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); margin-bottom:8px; }
+.hero-price { font-family: var(--serif); font-size: 40px; color: var(--accent); font-weight:300; }
+.hero-price span { font-size:16px; color:var(--muted); font-family:var(--sans); }
+
+/* PRODUCT DEFINITION BOX */
+.definition-box {
+  background: var(--bg2); border:1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  padding: 32px 28px; border-radius:2px;
+  font-size:15px; line-height:2; color: var(--text);
+  margin: 0 auto;
+}
+.definition-box strong { color: var(--accent); font-weight:500; }
+.analyze-tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:24px; }
+.analyze-tag {
+  font-family:var(--mono); font-size:11px; letter-spacing:0.5px;
+  background: var(--bg3); border:1px solid var(--border);
+  color: var(--accent); padding:8px 16px; border-radius:20px;
+}
+
+/* PROCESS STEPS */
+.process-list { display:flex; flex-direction:column; }
+.process-item { display:flex; gap:20px; padding: 24px 0; }
+.process-num {
+  font-family: var(--serif); font-size:22px; color: var(--accent);
+  min-width:48px;
+}
+.process-content { flex:1; padding-bottom:0; border-bottom:1px solid var(--border); padding-bottom:24px; }
+.process-item:last-child .process-content { border-bottom:none; }
+.process-title { font-size:16px; color: var(--text); margin-bottom:6px; font-weight:400; }
+.process-desc { font-size:14px; color: var(--muted); line-height:1.7; }
+
+/* REPORT PREVIEW CARD */
+.report-card {
+  background: linear-gradient(180deg, var(--bg2), var(--bg3));
+  border:1px solid rgba(201,169,110,0.25);
+  border-radius:4px; padding: 40px 32px;
+  position:relative;
+}
+.report-watermark {
+  position:absolute; top:20px; right:24px;
+  font-family:var(--mono); font-size:9px;
+  letter-spacing:1px; color: var(--muted);
+  border:1px solid var(--border); padding:4px 10px; border-radius:2px;
+}
+.report-header { font-family: var(--mono); font-size:11px; letter-spacing:3px; color: var(--accent); margin-bottom:28px; }
+.report-score-row { display:flex; align-items:baseline; gap:16px; margin-bottom:32px; }
+.report-score-label { font-size:14px; color: var(--muted); }
+.report-score-value { font-family: var(--serif); font-size:48px; color: var(--text); }
+.report-score-value span { font-size:20px; color:var(--accent); }
+.report-divider { border:none; border-top:1px dashed var(--border); margin: 24px 0; }
+.report-sub-label { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); margin-bottom:16px; }
+.report-rank-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; font-size:14px; }
+.report-rank-name { color: var(--text); display:flex; gap:10px; align-items:center; }
+.report-rank-num { font-family:var(--mono); color:var(--accent); font-size:12px; }
+.report-rank-pct { font-family:var(--serif); color: var(--accent); font-size:16px; }
+.report-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.report-tag { font-size:13px; background: var(--bg); border:1px solid var(--border); padding:6px 14px; border-radius:20px; color: var(--text); }
+.report-gauge-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px; color: var(--muted); }
+.report-dots { display:flex; gap:4px; }
+.dot { width:8px; height:8px; border-radius:50%; background: var(--border); }
+.dot.filled { background: var(--accent); }
+.report-note {
+  font-size:12px; color: var(--muted); text-align:center;
+  margin-top:28px; padding-top:20px; border-top:1px solid var(--border);
+  line-height:1.7;
+}
+
+/* ANALYSIS TABLE */
+.analysis-table { width:100%; border-collapse: collapse; }
+.analysis-table tr { border-bottom:1px solid var(--border); }
+.analysis-table tr:last-child { border-bottom:none; }
+.analysis-table td { padding: 18px 8px; font-size:14px; vertical-align:top; }
+.analysis-table td:first-child { color: var(--accent); font-family:var(--mono); font-size:12px; letter-spacing:0.5px; white-space:nowrap; padding-right:24px; width:110px; }
+.analysis-table td:last-child { color: var(--text); line-height:1.7; }
+
+/* DATA FLOW */
+.flow-list { display:flex; flex-direction:column; align-items:center; gap:0; }
+.flow-step {
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 14px 28px; border-radius:20px;
+  font-size:13px; color: var(--text);
+}
+.flow-arrow { color: var(--accent2); font-size:14px; padding: 6px 0; }
+.data-disclaimer {
+  font-size:12px; color: var(--muted); text-align:center;
+  margin-top:24px; line-height:1.7;
+}
+
+/* WHO GRID */
+.fit-grid {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap:16px;
+}
+.fit-item {
+  text-align:center; padding: 28px 20px;
+  background: var(--bg2); border:1px solid var(--border);
+  border-radius:2px;
+}
+.fit-icon { font-size:22px; margin-bottom:12px; }
+.fit-text { font-size:14px; color: var(--muted); line-height:1.7; }
+
+/* LIMITATION BOX */
+.limitation-box {
+  background: var(--bg2); border:1px solid var(--border);
+  padding: 28px 28px; border-radius:2px;
+  font-size:14px; color: var(--muted); line-height:1.9;
+}
+.limitation-box strong { color: var(--text); }
+
+/* JOURNEY STEPS */
+.journey-steps {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap:16px; text-align:center;
+}
+.journey-step {
+  padding: 24px 16px; background: var(--bg2);
+  border:1px solid var(--border); border-radius:2px;
+  position:relative;
+}
+.journey-step.highlight { border-color: rgba(201,169,110,0.4); }
+.journey-step-num { font-family:var(--mono); font-size:10px; color: var(--accent); letter-spacing:1px; margin-bottom:10px; }
+.journey-step-title { font-size:14px; color: var(--text); margin-bottom:6px; }
+.journey-step-desc { font-size:12px; color: var(--muted); line-height:1.6; }
+.journey-payback {
+  text-align:center; margin-top:28px; font-size:14px; color: var(--accent);
+  background: rgba(201,169,110,0.08); border:1px solid rgba(201,169,110,0.25);
+  padding:16px; border-radius:2px;
+}
+
+/* FAQ */
+.faq-item { border-bottom:1px solid var(--border); padding:22px 0; cursor:pointer; }
+.faq-q { display:flex; justify-content:space-between; align-items:center; font-size:15px; gap:16px; }
+.faq-toggle { color:var(--accent); font-size:18px; transition:transform 0.3s; min-width:20px; text-align:center; }
+.faq-a { font-size:14px; color:var(--muted); line-height:1.8; margin-top:14px; display:none; }
+.faq-item.open .faq-a { display:block; }
+.faq-item.open .faq-toggle { transform:rotate(45deg); }
+
+/* FINAL CTA */
+.final-cta { text-align:center; padding: 100px 24px 140px; }
+.btn-primary {
+  background: var(--accent); color:#080808;
+  border:none; cursor:pointer;
+  font-family: var(--sans); font-size:14px;
+  font-weight:500; letter-spacing:1px;
+  padding: 18px 48px; border-radius:2px;
+  transition: all 0.3s;
+}
+.btn-primary:hover { background:#d4b47a; transform:translateY(-2px); box-shadow: 0 8px 32px rgba(201,169,110,0.25); }
+
+/* STICKY CTA */
+.sticky-cta {
+  position: fixed; bottom:0; left:0; right:0;
+  background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
+  border-top:1px solid var(--border);
+  padding: 16px 24px; z-index:150;
+  display:flex; align-items:center; justify-content:center; gap:20px;
+}
+.sticky-price { font-family: var(--serif); color: var(--accent); font-size:18px; }
+.sticky-cta .btn-primary { padding:14px 40px; font-size:13px; }
+
+/* MODAL (기존 재사용) */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  z-index:200; align-items:center; justify-content:center; padding:24px;
+}
+.modal-overlay.active { display:flex; }
+.modal-box {
+  background: var(--bg2); border:1px solid var(--border);
+  border-radius:4px; padding:40px 32px; max-width:420px; width:100%;
+  animation: fadeUp 0.3s ease; position:relative;
+}
+.modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; line-height:1; padding:4px; }
+.modal-close:hover { color:var(--text); }
+.modal-eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--accent); margin-bottom:10px; }
+.modal-title { font-family:var(--serif); font-size:20px; font-weight:400; line-height:1.4; margin-bottom:24px; }
+.modal-fields { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.input-field {
+  width:100%; background:var(--bg3); border:1px solid var(--border);
+  color: var(--text); font-family:var(--sans); font-size:15px;
+  padding:16px 20px; border-radius:2px; outline:none; transition:border-color 0.3s;
+}
+.input-field:focus { border-color:var(--accent); }
+.input-field::placeholder { color:var(--muted); }
+.input-row { display:flex; gap:8px; }
+.input-row .input-field { flex:1; }
+.modal-submit {
+  width:100%; background:var(--accent); color:#080808; border:none; cursor:pointer;
+  font-family:var(--sans); font-size:13px; font-weight:500; letter-spacing:1px;
+  padding:16px; border-radius:2px; transition:all 0.3s;
+}
+.modal-submit:hover { background:#d4b47a; }
+.modal-submit:disabled { opacity:0.5; cursor:not-allowed; }
+.modal-fineprint { font-size:12px; color:var(--muted); margin-top:16px; text-align:center; line-height:1.6; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--bg3); border:1px solid var(--border);
+  color:var(--text); font-size:13px; padding:12px 24px; border-radius:2px;
+  opacity:0; transition:all 0.4s; z-index:999; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.success { border-color:rgba(90,170,122,0.4); color:#5aaa7a; }
+.toast.error { border-color:rgba(224,90,90,0.4); color:#e05a5a; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:600px) {
+  .back-link { top:16px; left:20px; }
+  .sticky-cta { flex-direction:column; gap:10px; padding:14px 20px; }
+  .hero-meta { gap:16px; }
+  .input-row { flex-direction:column; }
+}
+
+</style>
+</head>
+<body>
+<a href="../index.html" class="back-link">← INTERMARRY</a>
+
+<section class="hero">
+  <div class="hero-eyebrow">STEP 3 · 실속형</div>
+  <h1 class="hero-title">제주도 물가보다 싼<br>5박 6일 해외여행, 맞선은 덤입니다.</h1>
+  <p class="hero-sub">성혼을 강요하지 않는 '여행 겸 맞선' 컨셉.<br>직접 만나 충분한 시간을 보내고 결정하세요.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="hero-meta-value">5박 6일</div><div class="hero-meta-label">현지 체류</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-value">항공료 별도</div><div class="hero-meta-label">패키지 구성</div></div>
+  </div>
+  <div class="hero-price-box">
+    <div class="hero-price-label">패키지 가격</div>
+    <div class="hero-price">990,000<span>원</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">WHY</div>
+  <h2 class="section-title">왜 화상 미팅만으로는<br>부족할까요?</h2>
+  <p class="section-body">
+    화면 너머로는 알 수 없는 것들이 있습니다. 함께 걷는 걸음, 식사 자리에서의 대화, 현지 가족과의 만남.<br><br>
+    <strong style="color:var(--text)">단순한 여행이 아닙니다.</strong><br>
+    좋은 사람을 만나고, 함께 시간을 보내고, 결정은 한국에 돌아와서 하셔도 늦지 않습니다.
+  </p>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">PRODUCT</div>
+  <h2 class="section-title">이 패키지는 무엇을 포함하나요?</h2>
+  <div class="definition-box">
+    <strong>5박 6일 현지 체류형 맞선 투어</strong>입니다.<br>
+    항공료를 제외한 현지 체류, 맞선 주선, 가이드·통역 지원이 포함되며,
+    맞선뿐 아니라 <strong>현지 문화를 함께 경험</strong>하도록 설계되어 있습니다.<br><br>
+    성혼을 목적으로 몰아붙이지 않고, <strong>"여행을 하다 보니 인연을 만났다"</strong>는 편안한 흐름을 지향합니다.
+  </div>
+  <div class="analyze-tags">
+    <span class="analyze-tag">현지 숙박</span>
+    <span class="analyze-tag">맞선 주선</span>
+    <span class="analyze-tag">가이드·통역</span>
+    <span class="analyze-tag">문화 체험</span>
+    <span class="analyze-tag">미성사 시 컨설팅</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">PROCESS</div>
+  <h2 class="section-title">투어는 이렇게 준비됩니다</h2>
+  <div class="process-list">
+    <div class="process-item">
+      <div class="process-num">01</div>
+      <div class="process-content">
+        <div class="process-title">사전 상담 및 일정 확정</div>
+        <div class="process-desc">출국일, 희망 조건 확인</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">02</div>
+      <div class="process-content">
+        <div class="process-title">맞선 상대 사전 매칭</div>
+        <div class="process-desc">조건에 맞는 후보 프로필 사전 안내</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">03</div>
+      <div class="process-content">
+        <div class="process-title">출국 및 현지 도착</div>
+        <div class="process-desc">공항 픽업, 숙소 안내</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">04</div>
+      <div class="process-content">
+        <div class="process-title">맞선 및 교제 일정 진행</div>
+        <div class="process-desc">통역·가이드 동행하에 만남 진행</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">05</div>
+      <div class="process-content">
+        <div class="process-title">문화 체험 및 자유 일정</div>
+        <div class="process-desc">현지 문화를 함께 경험</div>
+      </div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">06</div>
+      <div class="process-content">
+        <div class="process-title">귀국 및 후속 상담</div>
+        <div class="process-desc">여정 정리, 다음 단계 논의</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">ITINERARY PREVIEW</div>
+  <h2 class="section-title">5박 6일은<br>이런 흐름으로 진행됩니다</h2>
+  <p class="section-body" style="margin-bottom:32px;">아래는 예시 일정이며, 실제 일정은 현지 상황과 상담 결과에 따라 조정됩니다.</p>
+
+  <div class="report-card">
+    <div class="report-watermark">예시 일정</div>
+    <div class="report-header">TOUR ITINERARY</div>
+
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">1일차</span> 출국 · 현지 도착 · 휴식</div></div>
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">2일차</span> 1차 맞선 · 통역 동행</div></div>
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">3일차</span> 교제 · 현지 문화 체험</div></div>
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">4일차</span> 추가 만남 또는 자유 일정</div></div>
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">5일차</span> 가족 상견례 (희망 시)</div></div>
+    <div class="report-rank-row"><div class="report-rank-name"><span class="report-rank-num">6일차</span> 정리 및 귀국</div></div>
+
+    <div class="report-note">항공료는 패키지 가격에 포함되어 있지 않으며, 별도 안내드립니다.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">ANALYSIS</div>
+  <h2 class="section-title">패키지에<br>포함된 항목</h2>
+  <table class="analysis-table">
+    <tr><td>숙박</td><td>5박 6일 현지 호텔 체류</td></tr>
+    <tr><td>맞선 주선</td><td>조건에 맞는 상대방 매칭 및 만남 자리 마련</td></tr>
+    <tr><td>가이드·통역</td><td>일정 전반 동행 지원</td></tr>
+    <tr><td>문화 체험</td><td>현지 관광 및 생활 문화 체험 일정</td></tr>
+    <tr><td>미성사 지원</td><td>맞선 미성사 시 1:1 컨설팅 제공</td></tr>
+    <tr><td>불포함</td><td>왕복 항공료 (별도 안내)</td></tr>
+  </table>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">WHO</div>
+  <h2 class="section-title">이런 분께 추천드려요</h2>
+  <div class="fit-grid">
+    <div class="fit-item"><div class="fit-icon">🌏</div><div class="fit-text">직접 만나서 충분히 시간을 보내고 결정하고 싶은 분</div></div>
+    <div class="fit-item"><div class="fit-icon">🧳</div><div class="fit-text">여행하듯 부담 없이 현지 문화를 경험하고 싶은 분</div></div>
+    <div class="fit-item"><div class="fit-icon">🤝</div><div class="fit-text">화상 미팅 이후 다음 단계로 진행하고 싶은 분</div></div>
+    <div class="fit-item"><div class="fit-icon">🕊️</div><div class="fit-text">결혼을 강요받지 않는 편안한 만남을 원하는 분</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">LIMITATION</div>
+  <h2 class="section-title">이 투어가<br>보장하는 것과 아닌 것</h2>
+  <div class="limitation-box">
+    이 패키지는 <strong>만남의 기회와 환경을 제공</strong>하는 상품이며,
+    <strong>성혼을 보장하지 않습니다.</strong><br><br>
+    맞선이 성사되지 않더라도 여정 자체가 헛되지 않도록, 현지 문화 체험과 귀국 후 1:1 컨설팅을 함께 제공해드립니다.
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">JOURNEY</div>
+  <h2 class="section-title">맞선 여행 이후의 여정</h2>
+  <div class="journey-steps">
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 01</div>
+      <div class="journey-step-title">적성검사 · 화상미팅</div>
+      <div class="journey-step-desc">사전 진단 및 확인</div>
+    </div>
+    <div class="journey-step highlight">
+      <div class="journey-step-num">STEP 02</div>
+      <div class="journey-step-title">맞선 여행</div>
+      <div class="journey-step-desc">지금 이 상품</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 03</div>
+      <div class="journey-step-title">정식 상담</div>
+      <div class="journey-step-desc">본계약 진행 여부 결정</div>
+    </div>
+    <div class="journey-step">
+      <div class="journey-step-num">STEP 04</div>
+      <div class="journey-step-title">성혼 진행</div>
+      <div class="journey-step-desc">한국 정착까지 지원</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-eyebrow">FAQ</div>
+  <h2 class="section-title">자주 묻는 질문</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>항공료는 별도인가요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">네, 패키지 가격 99만원에는 현지 체류비, 맞선 주선, 가이드 비용이 포함되며 항공료는 별도입니다.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>맞선이 성사되지 않으면 어떻게 되나요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">성혼을 강요하지 않는 컨셉으로 운영됩니다. 미성사 시에도 귀국 후 1:1 컨설팅을 통해 다음 방향을 함께 논의해드립니다.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q"><span>선착순 모집이라는데, 인원 제한이 있나요?</span><span class="faq-toggle">+</span></div>
+    <div class="faq-a">네, 회차별로 소수 인원 선착순으로 진행되며, 정확한 일정은 신청 후 담당자가 안내해드립니다.</div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2 class="section-title">99만원으로<br>직접 만나서 확인하세요.</h2>
+  <button class="btn-primary" onclick="handleProductClick('맞선여행')">신청하기</button>
+</div>
+
+
+<div class="sticky-cta">
+  <span class="sticky-price">990,000원</span>
+  <button class="btn-primary" onclick="handleProductClick('맞선여행')">신청하기</button>
+</div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-eyebrow" id="modalEyebrow">EXPERIENCE PROGRAM</div>
+    <div class="modal-title" id="modalTitle">신청 정보를 입력해주세요</div>
+    <div class="modal-fields">
+      <input type="text" id="m_name" class="input-field" placeholder="성함">
+      <div class="input-row">
+        <input type="number" id="m_age" class="input-field" placeholder="나이" min="20" max="70">
+        <input type="tel" id="m_phone" class="input-field" placeholder="연락처 (010-0000-0000)">
+      </div>
+    </div>
+    <button class="modal-submit" id="modalSubmitBtn" onclick="submitProductLead()">신청하기</button>
+    <p class="modal-fineprint">신청 후 담당자가 결제 안내를 위해 연락드립니다.<br>개인정보는 상담 목적 외 사용되지 않습니다.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+
+const SUPABASE_URL  = "https://grlfocvlfatuvphkyivd.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdybGZvY3ZsZmF0dXZwaGt5aXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDM1MzksImV4cCI6MjA4NTkxOTUzOX0.4dLzD1AYSuigxU_Q5ZZwZ6XDGejMvbuoYIjmB4D7dxo";
+
+const params = new URLSearchParams(window.location.search);
+const UTM = {
+  source:  params.get('utm_source')  || 'direct',
+  medium:  params.get('utm_medium')  || '',
+  content: params.get('utm_content') || '',
+};
+
+let selectedProduct = null;
+function handleProductClick(productName) {
+  selectedProduct = productName;
+  document.getElementById('modalEyebrow').textContent = productName.toUpperCase();
+  document.getElementById('modalTitle').textContent = `${productName} 신청 정보를 입력해주세요`;
+  document.getElementById('m_name').value = '';
+  document.getElementById('m_age').value = '';
+  document.getElementById('m_phone').value = '';
+  document.getElementById('productModal').classList.add('active');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('active');
+}
+
+async function submitProductLead() {
+  const name  = document.getElementById('m_name').value.trim();
+  const age   = document.getElementById('m_age').value;
+  const phone = document.getElementById('m_phone').value.trim();
+
+  if (!name || !age || !phone) {
+    showToast('모든 항목을 입력해주세요', 'error');
+    return;
+  }
+
+  const submitBtn = document.getElementById('modalSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '전송 중...';
+
+  const payload = {
+    name: name,
+    age: parseInt(age, 10),
+    phone: phone,
+    product: selectedProduct,
+    utm_source: UTM.source,
+    utm_medium: UTM.medium,
+    utm_content: UTM.content,
+    client_id: 'intermarry',
+    paid: false,
+    converted: false,
+    chat_started: false,
+  };
+
+  let success = false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error('[Product lead insert failed]', res.status, await res.text());
+    } else {
+      success = true;
+    }
+  } catch (e) {
+    console.error('[Product lead insert error]', e.message);
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = '신청하기';
+  closeProductModal();
+
+  if (success) {
+    showToast(`${selectedProduct} 신청 접수완료! 결제 안내를 위해 곧 연락드려요 ✦`, 'success');
+  } else {
+    showToast('접수 처리에 문제가 있었습니다. 다시 시도해주세요', 'error');
+  }
+}
+
+function toggleFaq(item) { item.classList.toggle('open'); }
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type || '') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+</script>
+</body>
+</html>
