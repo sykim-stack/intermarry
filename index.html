@@ -62,6 +62,40 @@
     padding: 140px 24px 100px;
     text-align: center;
     position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* HERO BACKGROUND MEDIA (실제 가족 사진/영상 슬라이드) */
+  .hero-bg {
+    position: absolute; inset: 0; z-index: -2;
+    overflow: hidden;
+  }
+  .hero-bg-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+  .hero-bg-slide.active { opacity: 1; }
+  .hero-bg-slide img,
+  .hero-bg-slide video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: saturate(0.85) brightness(0.75);
+  }
+  .hero-bg-slide.active img {
+    animation: heroKenBurns 7s ease-out forwards;
+  }
+  @keyframes heroKenBurns {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+  .hero-bg-overlay {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.35) 40%, rgba(8,8,8,0.75) 100%),
+      radial-gradient(ellipse at center, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.6) 100%);
   }
 
   .hero-label {
@@ -627,6 +661,9 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-bg-overlay"></div>
+
   <div class="hero-label">INTERNATIONAL MARRIAGE · REAL LIFE GUIDE</div>
   <h1 class="hero-title">
     국제결혼,<br>
@@ -1050,6 +1087,102 @@ const UTM = {
   medium:  params.get('utm_medium')  || '',
   content: params.get('utm_content') || '',
 };
+
+// ============================================================
+// HERO 배경 슬라이드쇼 — 실제 가족 사진/영상 순환
+// 순서: 웨딩 → 가족 일상 → 출산 → 성장 → 돌잔치 → 벚꽃 나들이 → 영상 3편 → 마무리 사진
+// ============================================================
+const HERO_MEDIA = [
+  { type: 'image', src: 'assets/hero/hero-01.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-02.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-03.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-04.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-05.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-06.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-07.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-08.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-09.jpg', duration: 5000 },
+  { type: 'image', src: 'assets/hero/hero-10.jpg', duration: 5000 },
+  { type: 'video', src: 'assets/hero/hero-v1.mp4', duration: 7000 },
+  { type: 'video', src: 'assets/hero/hero-v2.mp4', duration: 7000 },
+  { type: 'video', src: 'assets/hero/hero-v3.mp4', duration: 7000 },
+  { type: 'image', src: 'assets/hero/hero-11.jpg', duration: 5000 },
+];
+
+let heroIndex = 0;
+let heroSlideEls = [];
+let heroTimer = null;
+
+function initHeroBg() {
+  const container = document.getElementById('heroBg');
+  if (!container) return;
+
+  HERO_MEDIA.forEach((item, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'hero-bg-slide';
+    slide.dataset.index = i;
+    container.appendChild(slide);
+    heroSlideEls.push(slide);
+  });
+
+  showHeroSlide(0);
+}
+
+function showHeroSlide(i) {
+  const item = HERO_MEDIA[i];
+  const slide = heroSlideEls[i];
+
+  // 이전 슬라이드들 정리 (비디오는 정지, 소스 해제해 메모리 절약)
+  heroSlideEls.forEach((el, idx) => {
+    if (idx !== i) {
+      el.classList.remove('active');
+      const v = el.querySelector('video');
+      if (v) { v.pause(); }
+    }
+  });
+
+  // 슬라이드에 아직 미디어가 로드되지 않았으면 지금 로드 (지연 로딩)
+  if (!slide.dataset.loaded) {
+    if (item.type === 'image') {
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = '';
+      slide.appendChild(img);
+    } else {
+      const video = document.createElement('video');
+      video.src = item.src;
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      slide.appendChild(video);
+    }
+    slide.dataset.loaded = 'true';
+  }
+
+  slide.classList.add('active');
+
+  const v = slide.querySelector('video');
+  if (v) {
+    v.currentTime = 0;
+    v.play().catch(() => {});
+  } else {
+    // Ken Burns 애니메이션 재시작을 위해 리플로우 트리거
+    const img = slide.querySelector('img');
+    if (img) {
+      img.style.animation = 'none';
+      void img.offsetWidth;
+      img.style.animation = '';
+    }
+  }
+
+  clearTimeout(heroTimer);
+  heroTimer = setTimeout(() => {
+    heroIndex = (i + 1) % HERO_MEDIA.length;
+    showHeroSlide(heroIndex);
+  }, item.duration);
+}
+
+initHeroBg();
 
 // 실제 화면에 표시되는 스텝 순서 (id 기준)
 const STEP_ORDER = ['step1', 'step_contact', 'step2', 'step3', 'step4'];
