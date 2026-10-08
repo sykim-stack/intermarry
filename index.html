@@ -6,7 +6,7 @@
 <title>인터메리 — 국제결혼 이후의 삶</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-
+<link rel="preload" as="image" href="assets/hero/hero-01.jpg" fetchpriority="high">
 <style>
   :root {
     --bg:      #080808;
@@ -68,8 +68,10 @@
 
   /* HERO BACKGROUND MEDIA (실제 가족 사진/영상 슬라이드) */
   .hero-bg {
-    position: absolute; inset: 0; z-index: -2;
-    overflow: hidden;
+  position: absolute; inset: 0; z-index: -2;
+  overflow: hidden;
+  /* JS 슬라이드 뜨기 전까지 즉시 보이는 첫 이미지 */
+  background: url('assets/hero/hero-01.jpg') center 30% / cover no-repeat;
   }
   .hero-bg-slide {
     position: absolute; inset: 0;
@@ -1248,6 +1250,13 @@ function initHeroBg() {
     heroSlideEls.push(slide);
   });
 
+    // ▼ 이 줄 추가: 첫 이미지를 미리 DOM에 심어 즉시 로딩
+  const firstImg = document.createElement('img');
+  firstImg.src = HERO_MEDIA[0].src;
+  firstImg.alt = '';
+  heroSlideEls[0].appendChild(firstImg);
+  heroSlideEls[0].dataset.loaded = 'true';
+  
   showHeroSlide(0);
 }
 

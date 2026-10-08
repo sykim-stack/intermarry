@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신청자 관리 — 인터메리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808; --bg2: #0f0f0f; --bg3: #161616;
+    --border: rgba(255,255,255,0.08);
+    --text: #f2ece4; --muted: #999;
+    --accent: #c9a96e; --accent2: #8b6f47;
+    --sans: 'Noto Sans KR', sans-serif;
+    --serif: 'Noto Serif KR', serif;
+    --mono: 'DM Mono', monospace;
+    --good: #5aaa7a; --bad: #999;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-weight:300; min-height:100vh; }
+
+  /* 비밀번호 게이트 */
+  .gate {
+    min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; padding:24px; text-align:center;
+  }
+  .gate-title { font-family:var(--serif); font-size:22px; margin-bottom:24px; color:var(--text); }
+  .gate input {
+    background:var(--bg2); border:1px solid var(--border); color:var(--text);
+    font-family:var(--sans); font-size:15px; padding:14px 18px;
+    border-radius:2px; outline:none; width:240px; text-align:center;
+    margin-bottom:16px;
+  }
+  .gate input:focus { border-color:var(--accent); }
+  .gate button {
+    background:var(--accent); color:#080808; border:none; cursor:pointer;
+    font-family:var(--sans); font-size:14px; font-weight:500;
+    padding:14px 36px; border-radius:2px;
+  }
+  .gate-error { color:#e05a5a; font-size:13px; margin-top:12px; min-height:18px; }
+
+  /* 대시보드 */
+  .dash { display:none; max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
+  .dash.active { display:block; }
+
+  header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:32px; flex-wrap:wrap; gap:16px;
+  }
+  .dash-title { font-family:var(--serif); font-size:24px; color:var(--accent); }
+  .dash-sub { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:4px; letter-spacing:1px; }
+  .btn-refresh {
+    background:transparent; border:1px solid var(--border); color:var(--muted);
+    cursor:pointer; font-family:var(--sans); font-size:12px;
+    padding:10px 20px; border-radius:2px; transition:all 0.2s;
+  }
+  .btn-refresh:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
+
+  /* 통계 카드 */
+  .stats-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+    gap:12px; margin-bottom:32px;
+  }
+  .stat-card {
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:2px; padding:20px;
+  }
+  .stat-value { font-family:var(--serif); font-size:28px; color:var(--accent); }
+  .stat-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:6px; }
+
+  /* 필터 */
+  .filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
+  .filter-btn {
+    background:var(--bg2); border:1px solid var(--border); color:var(--muted);
+    cursor:pointer; font-family:var(--sans); font-size:12px;
+    padding:9px 18px; border-radius:20px; transition:all 0.2s;
+  }
+  .filter-btn.active { background:var(--accent); color:#080808; border-color:var(--accent); }
+  .search-input {
+    background:var(--bg2); border:1px solid var(--border); color:var(--text);
+    font-family:var(--sans); font-size:13px; padding:9px 16px;
+    border-radius:20px; outline:none; margin-left:auto; min-width:200px;
+  }
+  .search-input:focus { border-color:var(--accent); }
+
+  /* 테이블 */
+  .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:2px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; white-space:nowrap; }
+  th {
+    background:var(--bg2); text-align:left; padding:14px 16px;
+    font-family:var(--mono); font-size:10px; letter-spacing:1px;
+    color:var(--muted); border-bottom:1px solid var(--border);
+  }
+  td { padding:14px 16px; border-bottom:1px solid var(--border); color:var(--text); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+
+  .badge {
+    display:inline-block; font-size:11px; padding:4px 10px;
+    border-radius:12px; font-family:var(--mono);
+  }
+  .badge.yes { background:rgba(90,170,122,0.15); color:var(--good); }
+  .badge.no { background:rgba(255,255,255,0.06); color:var(--muted); }
+
+  .product-tag {
+    font-size:11px; padding:4px 10px; border-radius:12px;
+    background:rgba(201,169,110,0.12); color:var(--accent);
+  }
+
+  .empty-state {
+    text-align:center; padding:80px 24px; color:var(--muted); font-size:14px;
+  }
+  .loading { text-align:center; padding:80px 24px; color:var(--muted); font-size:14px; }
+
+  @media (max-width:700px) {
+    .search-input { margin-left:0; width:100%; }
+    .filter-row { flex-direction:column; align-items:stretch; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 비밀번호 게이트 -->
+<div class="gate" id="gate">
+  <div class="gate-title">신청자 관리 페이지</div>
+  <input type="password" id="gatePw" placeholder="비밀번호" onkeydown="if(event.key==='Enter') tryUnlock()">
+  <br>
+  <button onclick="tryUnlock()">입장</button>
+  <div class="gate-error" id="gateError"></div>
+</div>
+
+<!-- 대시보드 -->
+<div class="dash" id="dash">
+  <header>
+    <div>
+      <div class="dash-title">인터메리 신청자 현황</div>
+      <div class="dash-sub" id="lastUpdated">불러오는 중...</div>
+    </div>
+    <button class="btn-refresh" onclick="loadLeads()">↻ 새로고침</button>
+  </header>
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">전체</button>
+    <button class="filter-btn" data-filter="unpaid" onclick="setFilter('unpaid')">미결제</button>
+    <button class="filter-btn" data-filter="paid" onclick="setFilter('paid')">결제완료</button>
+    <button class="filter-btn" data-filter="converted" onclick="setFilter('converted')">전환완료</button>
+    <input type="text" class="search-input" id="searchInput" placeholder="이름 또는 연락처 검색" oninput="renderTable()">
+  </div>
+
+  <div class="table-wrap">
+    <table id="leadsTable">
+      <thead>
+        <tr>
+          <th>신청일시</th>
+          <th>이름</th>
+          <th>연락처</th>
+          <th>나이</th>
+          <th>신청상품</th>
+          <th>의향</th>
+          <th>예산</th>
+          <th>관심국가</th>
+          <th>걱정사항</th>
+          <th>유입경로</th>
+          <th>결제</th>
+          <th>전환</th>
+          <th>코어챗</th>
+        </tr>
+      </thead>
+      <tbody id="leadsBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none;">조건에 맞는 신청자가 없습니다.</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = "https://grlfocvlfatuvphkyivd.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdybGZvY3ZsZmF0dXZwaGt5aXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDM1MzksImV4cCI6MjA4NTkxOTUzOX0.4dLzD1AYSuigxU_Q5ZZwZ6XDGejMvbuoYIjmB4D7dxo";
+
+// 간단한 비밀번호 보호 — 클라이언트 측 체크라 완전한 보안은 아님 (URL을 아는 사람 대상 최소 차단용)
+const ADMIN_PASSWORD = "intermarry";
+
+let allLeads = [];
+let currentFilter = 'all';
+
+function tryUnlock() {
+  const pw = document.getElementById('gatePw').value;
+  if (pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem('im_admin_ok', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dash').classList.add('active');
+    loadLeads();
+  } else {
+    document.getElementById('gateError').textContent = '비밀번호가 올바르지 않습니다.';
+  }
+}
+
+if (sessionStorage.getItem('im_admin_ok') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('dash').classList.add('active');
+  loadLeads();
+}
+
+async function loadLeads() {
+  document.getElementById('lastUpdated').textContent = '불러오는 중...';
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/leads?client_id=eq.intermarry&order=created_at.desc&limit=500`,
+      {
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`${res.status}: ${errText}`);
+    }
+    allLeads = await res.json();
+    const now = new Date().toLocaleString('ko-KR');
+    document.getElementById('lastUpdated').textContent = `총 ${allLeads.length}건 · ${now} 기준`;
+    renderStats();
+    renderTable();
+  } catch (e) {
+    document.getElementById('lastUpdated').textContent = '불러오기 실패';
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('emptyState').textContent =
+      '데이터를 불러오지 못했습니다. Supabase의 leads 테이블에 anon 키로 조회(SELECT) 가능한 RLS 정책이 설정되어 있는지 확인해주세요. (' + e.message + ')';
+    document.getElementById('leadsBody').innerHTML = '';
+  }
+}
+
+function renderStats() {
+  const total = allLeads.length;
+  const paid = allLeads.filter(l => l.paid).length;
+  const converted = allLeads.filter(l => l.converted).length;
+
+  const productCounts = {};
+  allLeads.forEach(l => {
+    const p = l.product || '무료설문';
+    productCounts[p] = (productCounts[p] || 0) + 1;
+  });
+
+  let cardsHtml = `
+    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">전체 신청</div></div>
+    <div class="stat-card"><div class="stat-value">${paid}</div><div class="stat-label">결제 완료</div></div>
+    <div class="stat-card"><div class="stat-value">${converted}</div><div class="stat-label">본계약 전환</div></div>
+  `;
+  Object.keys(productCounts).forEach(p => {
+    cardsHtml += `<div class="stat-card"><div class="stat-value">${productCounts[p]}</div><div class="stat-label">${escapeHtml(p)}</div></div>`;
+  });
+
+  document.getElementById('statsGrid').innerHTML = cardsHtml;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.filter-btn[data-filter="${f}"]`).classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  let rows = allLeads.filter(l => {
+    if (currentFilter === 'unpaid' && l.paid) return false;
+    if (currentFilter === 'paid' && !l.paid) return false;
+    if (currentFilter === 'converted' && !l.converted) return false;
+    if (search) {
+      const name = (l.name || '').toLowerCase();
+      const phone = (l.phone || '').toLowerCase();
+      if (!name.includes(search) && !phone.includes(search)) return false;
+    }
+    return true;
+  });
+
+  const tbody = document.getElementById('leadsBody');
+  const emptyState = document.getElementById('emptyState');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    emptyState.style.display = 'block';
+    emptyState.textContent = '조건에 맞는 신청자가 없습니다.';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  tbody.innerHTML = rows.map(l => `
+    <tr>
+      <td>${formatDate(l.created_at)}</td>
+      <td>${escapeHtml(l.name || '-')}</td>
+      <td>${escapeHtml(l.phone || '-')}</td>
+      <td>${l.age ?? '-'}</td>
+      <td>${l.product ? `<span class="product-tag">${escapeHtml(l.product)}</span>` : '<span style="color:var(--muted)">무료설문</span>'}</td>
+      <td>${l.intent ?? '-'}</td>
+      <td>${escapeHtml(l.budget || '-')}</td>
+      <td>${escapeHtml(l.country || '-')}</td>
+      <td>${escapeHtml(l.concerns || '-')}</td>
+      <td>${escapeHtml(l.utm_source || '-')}</td>
+      <td>${badge(l.paid)}</td>
+      <td>${badge(l.converted)}</td>
+      <td>${badge(l.chat_started)}</td>
+    </tr>
+  `).join('');
+}
+
+function badge(val) {
+  return val
+    ? '<span class="badge yes">완료</span>'
+    : '<span class="badge no">미완료</span>';
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  return d.toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>
